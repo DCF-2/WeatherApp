@@ -1,9 +1,6 @@
 package com.weatherapp
 
-
 import android.app.Activity
-import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -28,31 +25,34 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.weatherapp.ui.theme.WeatherAppTheme
-import androidx.compose.ui.platform.LocalContext
 
-class LoginActivity : ComponentActivity() {
+class RegisterActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WeatherAppTheme {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    LoginPage(modifier = Modifier.padding(innerPadding))
+                    RegisterPage(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
-fun LoginPage(modifier: Modifier = Modifier) {
+fun RegisterPage(modifier: Modifier = Modifier) {
+    var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var confirmpassword by rememberSaveable { mutableStateOf("") }
     val activity = LocalContext.current as Activity
     Column(
         modifier = modifier.padding(16.dp).fillMaxSize(),
@@ -61,18 +61,26 @@ fun LoginPage(modifier: Modifier = Modifier) {
 
     ) {
         Text(
-            text = "Bem-vindo/a!",
+            text = "Formulario de Registro",
             fontSize = 24.sp
         )
+
         Spacer(modifier = modifier.size(24.dp))
-        //campos de texto
+
+        OutlinedTextField(
+            value = name,
+            label = { Text(text = "Digite seu nome") },
+            modifier = modifier.fillMaxWidth(fraction = 0.9f),
+            onValueChange = { name = it }
+        )
+
         OutlinedTextField(
             value = email,
             label = { Text(text = "Digite seu e-mail") },
             modifier = modifier.fillMaxWidth(fraction = 0.9f),
             onValueChange = { email = it }
         )
-        //campos de texto
+
         OutlinedTextField(
             value = password,
             label = { Text(text = "Digite sua senha") },
@@ -80,37 +88,29 @@ fun LoginPage(modifier: Modifier = Modifier) {
             onValueChange = { password = it },
             visualTransformation = PasswordVisualTransformation()
         )
+
+        OutlinedTextField(
+            value = confirmpassword,
+            label = { Text(text = "Confirme sua senha") },
+            modifier = modifier.fillMaxWidth(fraction = 0.9f),
+            onValueChange = { confirmpassword = it },
+            visualTransformation = PasswordVisualTransformation()
+        )
+
         Row(modifier = modifier) {
-            //evento de clique no botão e botão de login
-            Button( onClick = {
-                Toast.makeText(activity, "Login Sucesso!", Toast.LENGTH_LONG).show()
-                activity.startActivity(
-                    Intent(activity, MainActivity::class.java).setFlags(
-                        FLAG_ACTIVITY_SINGLE_TOP
-                    )
-                ) },
-                enabled = email.isNotEmpty() && password.isNotEmpty()
-            ) {
-                Text("Login")
-            }
-            Spacer(modifier = modifier.size(24.dp))
 
             Button(
                 onClick = {
-                    activity.startActivity(
-                        Intent(activity, RegisterActivity::class.java).setFlags(
-                            FLAG_ACTIVITY_SINGLE_TOP
-                        )
-                    )
-                }){
-                Text("Registrar")
+                    Toast.makeText(activity, "Registrado com Sucesso!", Toast.LENGTH_LONG).show()
+                    activity.finish()
+                },
+                enabled = email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty() && confirmpassword.isNotEmpty()
+            ) {
+                Text("Registre-se")
             }
-
             Spacer(modifier = modifier.size(24.dp))
-
-            // envento de clique no botão limpar
             Button(
-                onClick = { email = ""; password = "" }
+                onClick = { email = ""; password = ""; confirmpassword = ""; name = ""}
             ) {
                 Text("Limpar")
             }
