@@ -30,7 +30,7 @@ local.properties
 .idea/
 .kotlin/
 
-# Arquivos de módulo do IntelliJ
+# Arquivos de módulo do IntelliJa
 *.iml
 
 # Arquivos de workspace (menos comuns hoje em dia)
