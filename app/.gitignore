@@ -28,6 +28,7 @@ local.properties
 # =========================================
 # Diretório .idea (configurações de workspace, histórico local, etc.)
 .idea/
+.kotlin/
 
 # Arquivos de módulo do IntelliJ
 *.iml
