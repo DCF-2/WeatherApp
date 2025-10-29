@@ -1,1 +1,63 @@
+# =========================================
+# Arquivos de Build e Saída
+# =========================================
+# Ignora todos os diretórios 'build'
 /build
+*/build
+
+# Saídas de compilação
+*.apk
+*.aab
+*.jar
+*.aar
+
+# =========================================
+# Configurações Locais e Chaves
+# =========================================
+# Arquivo de propriedades locais (contém caminho do SDK, chaves de API, etc.)
+# IMPORTANTE: Nunca comite este arquivo!
+local.properties
+
+# Chaves de assinatura
+*.keystore
+*.jks
+*.private
+
+# =C========================================
+# Arquivos do Android Studio / IntelliJ
+# =========================================
+# Diretório .idea (configurações de workspace, histórico local, etc.)
+.idea/
+
+# Arquivos de módulo do IntelliJ
+*.iml
+
+# Arquivos de workspace (menos comuns hoje em dia)
+*.iws
+*.ipr
+
+# =========================================
+# Arquivos do Gradle
+# =========================================
+# Cache e arquivos gerados pelo Gradle
+.gradle/
+build-cache/
+
+# =========================================
+# Logs e Capturas
+# =========================================
+# Capturas de performance e heap do Android Studio
+captures/
+*.hprof
+
+# Logs
+*.log
+
+# =========================================
+# Arquivos do Sistema Operacional
+# =========================================
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

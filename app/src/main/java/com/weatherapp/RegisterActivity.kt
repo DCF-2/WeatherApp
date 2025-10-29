@@ -104,7 +104,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                     Toast.makeText(activity, "Registrado com Sucesso!", Toast.LENGTH_LONG).show()
                     activity.finish()
                 },
-                enabled = email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty() && confirmpassword.isNotEmpty()
+                enabled = email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty() && confirmpassword.isNotEmpty() && password == confirmpassword
             ) {
                 Text("Registre-se")
             }
