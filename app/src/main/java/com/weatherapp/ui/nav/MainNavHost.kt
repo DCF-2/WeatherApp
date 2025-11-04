@@ -14,13 +14,13 @@ fun MainNavHost(
     ) {
     NavHost(navController, startDestination = Route.Home) {
         composable<Route.Home> {
-            HomePage()
+            HomePage(viewModel = viewModel)
         }
         composable<Route.List> {
             ListPage(viewModel = viewModel)
         }
         composable<Route.Map> {
-            MapPage()
+            MapPage(viewModel = viewModel)
         }
     }
 }
