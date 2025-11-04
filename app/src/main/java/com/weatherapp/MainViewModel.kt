@@ -1,7 +1,8 @@
-package com.weatherapp.Model
+package com.weatherapp
 
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import com.weatherapp.Model.City
 
 class MainViewModel : ViewModel() {
     private val _cities = getCities().toMutableStateList()
