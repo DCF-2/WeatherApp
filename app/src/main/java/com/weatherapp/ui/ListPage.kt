@@ -42,10 +42,10 @@ fun ListPage(
     ) {
         items(cityList, key = { it.name }) { city ->
             CityItem(city = city, onClose = {
-                Toast.makeText(activity, "Cidade Removida", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "${city.name} Removida", Toast.LENGTH_LONG).show()
                 viewModel.remove(city)
             }, onClick = {
-                Toast.makeText(activity, "Cidade Cadastrada", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "${city.name}, já está Cadastrada", Toast.LENGTH_LONG).show()
                 viewModel.add("")
             })
         }
