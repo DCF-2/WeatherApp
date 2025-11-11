@@ -1,6 +1,7 @@
 package com.weatherapp
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -34,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.weatherapp.ui.theme.WeatherAppTheme
 import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,7 @@ class LoginActivity : ComponentActivity() {
         }
     }
 }
+@SuppressLint("ContextCastToActivity")
 @Preview(showBackground = true)
 @Composable
 fun LoginPage(modifier: Modifier = Modifier) {
@@ -83,12 +87,19 @@ fun LoginPage(modifier: Modifier = Modifier) {
         Row(modifier = modifier) {
             //evento de clique no botão e botão de login
             Button( onClick = {
-                Toast.makeText(activity, "Login Sucesso!", Toast.LENGTH_LONG).show()
-                activity.startActivity(
-                    Intent(activity, MainActivity::class.java).setFlags(
-                        FLAG_ACTIVITY_SINGLE_TOP
-                    )
-                ) },
+                Firebase.auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(activity) { task ->
+                        if (task.isSuccessful) {
+                            activity.startActivity(
+                                Intent(activity, MainActivity::class.java).setFlags(
+                                    FLAG_ACTIVITY_SINGLE_TOP
+                                )
+                            )
+                            Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(activity, "Login FALHOU!", Toast.LENGTH_LONG).show() }
+                    }
+                              },
                 enabled = email.isNotEmpty() && password.isNotEmpty()
             ) {
                 Text("Login")

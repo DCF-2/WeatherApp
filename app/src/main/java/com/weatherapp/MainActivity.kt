@@ -31,6 +31,8 @@ import androidx.navigation.compose.rememberNavController
 import com.weatherapp.ui.CityDialog
 import com.weatherapp.ui.theme.WeatherAppTheme
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -52,17 +54,27 @@ class MainActivity : ComponentActivity() {
                 if (showDialog) CityDialog(
                     onDismiss = { showDialog = false },
                     onConfirm = { city ->
-                        if (city.isNotBlank()) viewModel.add(city)
+                        if (
+                            city.isNotBlank()
+                            )
+                            viewModel.add(city)
                         showDialog = false
                     })
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Bem-vindo/a!") },
+                            title = {
+                                Text("Bem-vindo/a!"
+                                )
+                                    },
 
                             actions = {
 
-                                IconButton( onClick = { finish() } ) {
+                                IconButton( onClick = {
+                                    Firebase.auth.signOut()
+                                    finish()
+                                } )
+                                {
                                     Icon(
                                         imageVector =
                                             Icons.AutoMirrored.Filled.ExitToApp,
@@ -81,22 +93,31 @@ class MainActivity : ComponentActivity() {
 
                             )
 
-                        BottomNavBar(navController = navController, items)
+                        BottomNavBar(
+                            navController = navController,
+                            items
+                        )
 
                     },
 
                     floatingActionButton = {
                         if (showButton) {
                             FloatingActionButton(onClick = { showDialog = true }) {
-                                Icon(Icons.Default.Add, contentDescription = "Adicionar")
+                                Icon(
+                                    Icons.Default.Add,
+                                    contentDescription = "Adicionar"
+                                )
                             }
                         }
                     }
                 ) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
+                    Box(
+                        modifier = Modifier.padding(innerPadding))
+                    {
                         launcher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
                         MainNavHost(
-                            navController = navController, viewModel
+                            navController = navController,
+                            viewModel
                         )
                     }
                 }
