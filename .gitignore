@@ -41,6 +41,9 @@ local.properties
 # Arquivos de módulo do IntelliJa
 *.iml
 
+# Arquivos do firebase e json
+google-services.json
+
 # Arquivos de workspace (menos comuns hoje em dia)
 *.iws
 *.ipr
