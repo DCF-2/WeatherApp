@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:name=".WeatherApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,11 +16,13 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
+            android:launchMode="singleTop"
             android:label="Tela de Registro"
             android:theme="@style/Theme.WeatherApp" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:label="WeatherApp"
             android:theme="@style/Theme.WeatherApp">
             <intent-filter>
@@ -31,6 +34,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:label="WeatherApp"
             android:theme="@style/Theme.WeatherApp">
 
