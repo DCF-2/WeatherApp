@@ -10,7 +10,7 @@ import com.google.firebase.auth.auth
 
 class WeatherApp : Application() {
     val FLAGS =
-        FLAG_ACTIVITY_SINGLE_TOP or // Não cria atividade se no topo
+        FLAG_ACTIVITY_SINGLE_TOP or        // Não cria atividade se no topo
                 FLAG_ACTIVITY_NEW_TASK or // Cria nova tarefa
                 FLAG_ACTIVITY_CLEAR_TASK // Limpa o backstack
 
