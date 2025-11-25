@@ -65,10 +65,9 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             title = {
-                                Text(
-                                    "Bem-vindo/a!"
-                                )
-                            },
+                                val name = viewModel.user?.name?:"[carregando...]"
+                                Text("Bem-vindo/a! $name")
+                            } ,
 
                             actions = {
 
