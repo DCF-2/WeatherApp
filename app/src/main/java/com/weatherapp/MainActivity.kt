@@ -2,6 +2,7 @@ package com.weatherapp
 
 import BottomNavBar
 import MainNavHost
+import android.R.attr.name
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,6 +35,7 @@ import com.weatherapp.ui.theme.WeatherAppTheme
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.weatherapp.api.WeatherService
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.viewmodel.MainViewModel
 import com.weatherapp.viewmodel.MainViewModelFactory
@@ -54,8 +56,9 @@ class MainActivity : ComponentActivity() {
                 contract =
                     ActivityResultContracts.RequestPermission(), onResult = {})
             val fbDB = remember { FBDatabase() }
+            val weatherService = remember { WeatherService() }
             val viewModel : MainViewModel = viewModel(
-                factory = MainViewModelFactory(fbDB)
+                factory = MainViewModelFactory(fbDB, weatherService)
             )
 
             WeatherAppTheme {
@@ -65,7 +68,7 @@ class MainActivity : ComponentActivity() {
                         if (
                             city.isNotBlank()
                         )
-                            viewModel.add(city)
+                            viewModel.addCity(name = city)
                         showDialog = false
                     })
                 Scaffold(
@@ -125,8 +128,7 @@ class MainActivity : ComponentActivity() {
                     {
                         launcher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
                         MainNavHost(
-                            navController = navController,
-                            viewModel
+                            navController = navController, viewModel
                         )
                     }
                 }

@@ -47,7 +47,8 @@ fun MapPage(
         uiSettings = MapUiSettings(myLocationButtonEnabled = true),
         cameraPositionState = camPosState,
                 onMapClick = {
-            viewModel.add("Cidade@${it.latitude}:${it.longitude}", location = it) }
+                    viewModel.addCity(location = it)
+                }
     ) {
         viewModel.cities.forEach {
             if (it.location != null) {
@@ -55,24 +56,5 @@ fun MapPage(
                     title = it.name, snippet = "${it.location}")
             }
         }
-
-        Marker(
-            state = MarkerState(position = recife),
-            title = "Recife",
-            snippet = "Marcador em Recife",
-            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
-        )
-        Marker(
-            state = MarkerState(position = caruaru),
-            title = "Caruaru",
-            snippet = "Marcador em Caruaru",
-            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-        )
-        Marker(
-            state = MarkerState(position = joaopessoa),
-            title = "João Pessoa",
-            snippet = "Marcador em João Pessoa",
-            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-        )
     }
 }
