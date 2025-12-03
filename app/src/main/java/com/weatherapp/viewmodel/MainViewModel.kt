@@ -8,13 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.model.LatLng
 import com.weatherapp.Model.City
 import com.weatherapp.Model.User
-import com.weatherapp.api.WeatherService
 import com.weatherapp.db.fb.FBCity
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.db.fb.toFBCity
 
-class MainViewModel (private val db: FBDatabase,
-                     private val service : WeatherService): ViewModel(), FBDatabase.Listener {
+class MainViewModel (private val db: FBDatabase): ViewModel(),
+    FBDatabase.Listener {
     private val _cities = mutableStateListOf<City>()
     val cities
         get() = _cities.toList()
@@ -54,29 +53,13 @@ class MainViewModel (private val db: FBDatabase,
     override fun onCityRemoved(city: FBCity) {
         _cities.remove(city.toCity())
     }
-
-    fun addCity(name: String) {
-        service.getLocation(name) { lat, lng ->
-            if (lat != null && lng != null) {
-                db.add(City(name=name, location=LatLng(lat, lng)).toFBCity())
-            }
-        }
-    }
-    fun addCity(location: LatLng) {
-        service.getName(location.latitude, location.longitude) { name ->
-            if (name != null) {
-                db.add(City(name = name, location = location).toFBCity())
-            }
-        }
-    }
-
 }
 
-class MainViewModelFactory(private val db : FBDatabase, private val service : WeatherService) :
+class MainViewModelFactory(private val db : FBDatabase) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(db, service) as T
+            return MainViewModel(db) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
