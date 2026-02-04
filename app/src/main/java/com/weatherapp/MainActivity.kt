@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-
             val navController = rememberNavController()
             var showDialog by remember { mutableStateOf(false) }
             val currentRoute = navController.currentBackStackEntryAsState()
