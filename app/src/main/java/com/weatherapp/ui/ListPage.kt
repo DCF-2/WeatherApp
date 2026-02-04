@@ -43,7 +43,6 @@ fun ListPage(
             CityItem(city = city, weather = viewModel.weather(city.name),
               onClick = {
                     viewModel.city = city.name
-                    viewModel.page = Route.Home
             }, onClose = {
                     Toast.makeText(activity, "${city.name} Removida", Toast.LENGTH_LONG).show()
                     viewModel.remove(city)

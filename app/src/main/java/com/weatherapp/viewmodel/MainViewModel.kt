@@ -1,7 +1,6 @@
 package com.weatherapp.viewmodel
 
 import FBUser
-import Route
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -26,11 +25,6 @@ class MainViewModel (private val db: FBDatabase,
 
     private val _weather = mutableStateMapOf<String, Weather>()
     private val _forecast = mutableStateMapOf<String, List<Forecast>?>()
-
-    private var _page = mutableStateOf<Route>(Route.Home)
-    var page: Route
-        get() = _page.value
-        set(tmp) { _page.value = tmp }
 
     private var _city = mutableStateOf<String?>(null)
     var city: String?
