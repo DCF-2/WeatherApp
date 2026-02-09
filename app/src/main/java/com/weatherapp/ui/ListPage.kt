@@ -21,11 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.weatherapp.viewmodel.MainViewModel
 import com.weatherapp.Model.City
 import com.weatherapp.Model.Weather
+import com.weatherapp.R
 
 @Composable
 fun ListPage(
@@ -43,6 +46,7 @@ fun ListPage(
             CityItem(city = city, weather = viewModel.weather(city.name),
               onClick = {
                     viewModel.city = city.name
+                    viewModel.page = Route.Home
             }, onClose = {
                     Toast.makeText(activity, "${city.name} Removida", Toast.LENGTH_LONG).show()
                     viewModel.remove(city)
@@ -65,9 +69,11 @@ fun CityItem(
         modifier = modifier.fillMaxWidth().padding(8.dp).clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            Icons.Rounded.FavoriteBorder,
-            contentDescription = ""
+        AsyncImage( // Substitui o Icon(...)
+            model = weather.imgUrl,
+            modifier = Modifier.size(75.dp),
+            error = painterResource(id = R.drawable.loading),
+            contentDescription = "Imagem"
         )
         Spacer(modifier = Modifier.size(12.dp))
         Column(modifier = Modifier.weight(1f)) {
