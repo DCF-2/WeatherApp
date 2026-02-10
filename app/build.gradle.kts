@@ -5,12 +5,14 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
-    id ("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.google.gms.google.services)
+    id("com.google.devtools.ksp") version "2.3.4"
 }
 
 android {
     namespace = "com.weatherapp"
+    compileSdk = 36
     compileSdk {
         version = release(36)
     }
@@ -26,9 +28,11 @@ android {
 
         val keyFile = project.rootProject.file("local.properties")
         val props = Properties()
-        props.load(keyFile.inputStream())
-        buildConfigField ("String", "WEATHER_API_KEY",
-            props.getProperty("WEATHER_API_KEY"))
+        if (keyFile.exists()) {
+            props.load(keyFile.inputStream())
+        }
+        // Nota: Garanta que a chave existe ou trate o nulo para evitar erros de build se o arquivo estiver vazio
+        buildConfigField("String", "WEATHER_API_KEY", props.getProperty("WEATHER_API_KEY") ?: "\"\"")
     }
 
     buildTypes {
@@ -41,12 +45,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -90,10 +96,22 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:6.12.1")
 
     //Api retorfit - wheather api
-    implementation ("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation ("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
 
     // suporte as biblioteca Coil
     implementation("io.coil-kt:coil-compose:2.7.0")
 
+    val room_version = "2.8.4"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+}
+
+// Configuração correta do Kotlin JVM Target para a versão 21
+// Isso substitui o antigo bloco kotlinOptions dentro do android {}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
 }
