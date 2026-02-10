@@ -17,9 +17,14 @@ import com.weatherapp.api.toWeather
 import com.weatherapp.db.fb.FBCity
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.db.fb.toFBCity
+import com.weatherapp.monitor.ForecastMonitor
 
 class MainViewModel (private val db: FBDatabase,
-                     private val service : WeatherService): ViewModel(), FBDatabase.Listener {
+                     private val monitor: ForecastMonitor,
+                     private val service : WeatherService):
+                                            ViewModel(),
+                                            FBDatabase.Listener
+{
     private val _cities = mutableStateMapOf<String, City>()
     val cities : List<City>
         get() = _cities.values.toList().sortedBy { it.name }
@@ -61,20 +66,26 @@ class MainViewModel (private val db: FBDatabase,
     }
 
     override fun onUserSignOut() {
-        //TODO("Not yet implemented")
+        monitor.cancelAll()
     }
 
     override fun onCityAdded(city: FBCity) {
-        _cities[city.name!!] = city.toCity()
+        val newCity = city.toCity()
+        _cities[city.name!!] = newCity
+        monitor.updateCity(newCity)
     }
 
     override fun onCityUpdated(city: FBCity) {
+        val updatedCity = city.toCity()
         _cities.remove(city.name)
-        _cities[city.name!!] = city.toCity()
+        _cities[city.name!!] = updatedCity
+        monitor.updateCity(updatedCity)
     }
 
     override fun onCityRemoved(city: FBCity) {
+        val removedCity = city.toCity()
         _cities.remove(city.name)
+        monitor.cancelCity(removedCity)
     }
 
     fun addCity(name: String) {
@@ -132,11 +143,14 @@ class MainViewModel (private val db: FBDatabase,
 
 }
 
-class MainViewModelFactory(private val db : FBDatabase, private val service : WeatherService) :
+class MainViewModelFactory(
+    private val db : FBDatabase,
+    private val monitor: ForecastMonitor,
+    private val service : WeatherService) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(db, service) as T
+            return MainViewModel(db,monitor , service) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
