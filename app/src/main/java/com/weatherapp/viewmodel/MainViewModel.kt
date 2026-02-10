@@ -18,15 +18,16 @@ import com.weatherapp.db.fb.FBCity
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.db.fb.toFBCity
 import com.weatherapp.monitor.ForecastMonitor
+import com.weatherapp.repo.Repository
 
-class MainViewModel (private val db: FBDatabase,
-                     private val monitor: ForecastMonitor,
-                     private val service : WeatherService):
-                                            ViewModel(),
-                                            FBDatabase.Listener
-{
+class MainViewModel(
+    private val repo: Repository,
+    private val monitor: ForecastMonitor,
+    private val service: WeatherService
+) : ViewModel(), Repository.Listener {
+
     private val _cities = mutableStateMapOf<String, City>()
-    val cities : List<City>
+    val cities: List<City>
         get() = _cities.values.toList().sortedBy { it.name }
 
     private val _weather = mutableStateMapOf<String, Weather>()
@@ -42,70 +43,60 @@ class MainViewModel (private val db: FBDatabase,
         get() = _city.value
         set(tmp) { _city.value = tmp }
 
-    private val _user = mutableStateOf<User?> (null)
-    val user : User?
+    private val _user = mutableStateOf<User?>(null)
+    val user: User?
         get() = _user.value
 
-    val cityMap : Map<String, City>
-    get() = _cities.toMap()
+    val cityMap: Map<String, City>
+        get() = _cities.toMap()
 
     init {
-        db.setListener(this)
+        repo.setListener(this)
     }
 
     fun remove(city: City) {
-        db.remove(city.toFBCity())
+        repo.remove(city)
     }
-
-    fun add(name: String, location : LatLng? = null) {
-        db.add(City(name = name, location = location).toFBCity())
+    fun add(name: String, location: LatLng? = null) {
+        repo.add(City(name = name, location = location))
     }
-
-    override fun onUserLoaded(user: FBUser) {
-        _user.value = user.toUser()
+    override fun onUserLoaded(user: User) {
+        _user.value = user
     }
 
     override fun onUserSignOut() {
         monitor.cancelAll()
     }
-
-    override fun onCityAdded(city: FBCity) {
-        val newCity = city.toCity()
-        _cities[city.name!!] = newCity
-        monitor.updateCity(newCity)
+    override fun onCityAdded(city: City) {
+        _cities[city.name] = city
+        monitor.updateCity(city)
     }
-
-    override fun onCityUpdated(city: FBCity) {
-        val updatedCity = city.toCity()
+    override fun onCityUpdated(city: City) {
         _cities.remove(city.name)
-        _cities[city.name!!] = updatedCity
-        monitor.updateCity(updatedCity)
+        _cities[city.name] = city
+        monitor.updateCity(city)
     }
-
-    override fun onCityRemoved(city: FBCity) {
-        val removedCity = city.toCity()
+    override fun onCityRemoved(city: City) {
         _cities.remove(city.name)
-        monitor.cancelCity(removedCity)
+        monitor.cancelCity(city)
     }
-
     fun addCity(name: String) {
         service.getLocation(name) { lat, lng ->
             if (lat != null && lng != null) {
-                db.add(City(name=name, location=LatLng(lat, lng)).toFBCity())
+                repo.add(City(name = name, location = LatLng(lat, lng)))
             }
         }
     }
     fun addCity(location: LatLng) {
         service.getName(location.latitude, location.longitude) { name ->
             if (name != null) {
-                db.add(City(name = name, location = location).toFBCity())
+                repo.add(City(name = name, location = location))
             }
         }
     }
-
-    fun weather (name: String) = _weather.getOrPut(name) {
+    fun weather(name: String) = _weather.getOrPut(name) {
         loadWeather(name)
-        Weather.LOADING // return
+        Weather.LOADING
     }
     private fun loadWeather(name: String) {
         service.getWeather(name) { apiWeather ->
@@ -115,16 +106,15 @@ class MainViewModel (private val db: FBDatabase,
             }
         }
     }
-
-    fun forecast (name: String) = _forecast.getOrPut(name) {
+    fun forecast(name: String) = _forecast.getOrPut(name) {
         loadForecast(name)
-        emptyList() //return
+        emptyList()
     }
-
     private fun loadForecast(name: String) {
         service.getForecast(name) { apiForecast ->
             apiForecast?.let {
-                _forecast[name] = apiForecast.toForecast() }
+                _forecast[name] = apiForecast.toForecast()
+            }
         }
     }
 
@@ -136,21 +126,18 @@ class MainViewModel (private val db: FBDatabase,
         }
     }
 
-    fun update(city: City){
-        db.update(city.toFBCity())
+    fun update(city: City) {
+        repo.update(city)
     }
-
-
 }
-
 class MainViewModelFactory(
-    private val db : FBDatabase,
+    private val repo: Repository,
     private val monitor: ForecastMonitor,
-    private val service : WeatherService) :
-    ViewModelProvider.Factory {
+    private val service: WeatherService
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(db,monitor , service) as T
+            return MainViewModel(repo, monitor, service) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
