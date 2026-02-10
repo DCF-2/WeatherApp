@@ -2,7 +2,6 @@ package com.weatherapp.viewmodel
 
 import FBUser
 import Route
-import androidx.browser.browseractions.BrowserServiceFileProvider.loadBitmap
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -41,6 +40,9 @@ class MainViewModel (private val db: FBDatabase,
     private val _user = mutableStateOf<User?> (null)
     val user : User?
         get() = _user.value
+
+    val cityMap : Map<String, City>
+    get() = _cities.toMap()
 
     init {
         db.setListener(this)
@@ -121,6 +123,10 @@ class MainViewModel (private val db: FBDatabase,
                 _weather[name] = weather.copy(bitmap = bitmap)
             }
         }
+    }
+
+    fun update(city: City){
+        db.update(city.toFBCity())
     }
 
 
