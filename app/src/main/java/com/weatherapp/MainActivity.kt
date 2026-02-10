@@ -1,6 +1,8 @@
 package com.weatherapp
 
+import BottomNavBar
 import MainNavHost
+import Route
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,12 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.util.Consumer
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.weatherapp.ui.CityDialog
-import com.weatherapp.ui.theme.WeatherAppTheme
-import androidx.navigation.NavDestination.Companion.hasRoute
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.weatherapp.api.WeatherService
@@ -42,9 +43,11 @@ import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.db.local.LocalDatabase
 import com.weatherapp.monitor.ForecastMonitor
 import com.weatherapp.repo.Repository
+import com.weatherapp.ui.CityDialog
 import com.weatherapp.ui.nav.BottomNavBar
+import com.weatherapp.ui.theme.WeatherAppTheme
 import com.weatherapp.viewmodel.MainViewModel
-import com.weatherapp.viewmodel.MainViewModelFactory
+
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -76,8 +79,9 @@ class MainActivity : ComponentActivity() {
             val repo = remember { Repository(fbDB, localDB) }
 
             val viewModel: MainViewModel = viewModel(
-                factory = MainViewModelFactory(repo, monitor, weatherService)
+                factory = MainViewModel.MainViewModelFactory(repo, weatherService,monitor )
             )
+            val user = viewModel.user.collectAsStateWithLifecycle(null).value
 
             DisposableEffect(Unit) {
                 val listener = Consumer<Intent> { intent ->
@@ -103,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             title = {
-                                val name = viewModel.user?.name ?: "[carregando...]"
+                                val name = user?.name ?: "[carregando...]"
                                 Text("Bem-vindo/a! $name")
                             },
                             actions = {

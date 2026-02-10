@@ -1,6 +1,7 @@
 package com.weatherapp.ui
 
-import android.widget.Toast
+import Route
+import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,36 +21,47 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.weatherapp.viewmodel.MainViewModel
 import com.weatherapp.model.City
 import com.weatherapp.model.Weather
 import com.weatherapp.R
+import com.weatherapp.viewmodel.MainViewModel
 
 @Composable
-fun ListPage(
-    modifier: Modifier = Modifier,
-    viewModel : MainViewModel
-) {
-    val cityList = viewModel.cities
-    val activity = LocalActivity.current
+fun ListPage(viewModel: MainViewModel) {
+    val cityMap = viewModel.cities.collectAsStateWithLifecycle(emptyMap()).value
+    val cityList = cityMap.values.toList().sortedBy { it.name }
+    val weatherMap = viewModel.weather.collectAsStateWithLifecycle(emptyMap()).value
+    val activity = LocalActivity.current as Activity
+
     LazyColumn(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        items(items = cityList, key = { it.name } ) { city ->
-            CityItem(city = city, weather = viewModel.weather(city.name),
-              onClick = {
+        items(items = cityList, key = { it.name }) { city ->
+            LaunchedEffect(city.name) {
+                viewModel.loadWeather(city.name)
+            }
+
+            // Pega o clima do mapa ou LOADING se não existir
+            val weather = weatherMap[city.name] ?: Weather.LOADING
+
+            CityItem(
+                city = city,
+                weather = weather,
+                onClick = {
                     viewModel.city = city.name
                     viewModel.page = Route.Home
-            }, onClose = {
-                    Toast.makeText(activity, "${city.name} Removida", Toast.LENGTH_LONG).show()
+                },
+                onClose = {
                     viewModel.remove(city)
                 }
             )
@@ -63,14 +75,17 @@ fun CityItem(
     weather: Weather,
     onClick: () -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val desc = if (weather == Weather.LOADING) "Carregando clima..." else weather.desc
     Row(
-        modifier = modifier.fillMaxWidth().padding(8.dp).clickable { onClick() },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage( // Substitui o Icon(...)
+        AsyncImage(
             model = weather.imgUrl,
             modifier = Modifier.size(75.dp),
             error = painterResource(id = R.drawable.loading),
@@ -78,21 +93,28 @@ fun CityItem(
         )
         Spacer(modifier = Modifier.size(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(modifier = Modifier,
+            Text(
                 text = city.name,
-                fontSize = 24.sp)
-            Text(modifier = Modifier,
-                text = desc,
-                fontSize = 16.sp)
-            // Passo 6: Ícone de monitoramento (estático)
-            Icon(
-                imageVector = if (city.isMonitored)
-                    Icons.Filled.Notifications
-                else
-                    Icons.Outlined.Notifications,
-                contentDescription = "Monitorada?",
-                modifier = Modifier.size(24.dp).padding(end = 8.dp)
+                fontSize = 24.sp
             )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = desc,
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(1f)
+                )
+                // Ícone de monitoramento (estático)
+                Icon(
+                    imageVector = if (city.isMonitored)
+                        Icons.Filled.Notifications
+                    else
+                        Icons.Outlined.Notifications,
+                    contentDescription = "Monitorada?",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp)
+                )
+            }
         }
         IconButton(onClick = onClose) {
             Icon(Icons.Filled.Close, contentDescription = "Close")
