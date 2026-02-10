@@ -74,7 +74,7 @@ Você pode instalar o aplicativo diretamente pelas nossas releases.
 Quer testar o app sem precisar configurar o ambiente de desenvolvimento?
 Baixe o arquivo `.apk` da versão mais recente na aba de **Releases** deste repositório e instale no seu dispositivo Android.
 
-[📥 Baixar APK Mais Recente](https://github.com/seu-usuario/WeatherApp/releases)
+[📥 Baixar APK Mais Recente]([https://github.com/seu-usuario/WeatherApp/releases](https://github.com/DCF-2/WeatherApp/releases/download/v1.0.0/WeatherApp-v1.0.apk))
 
 
 <div align="center">
