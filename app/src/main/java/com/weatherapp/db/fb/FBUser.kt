@@ -1,4 +1,4 @@
-import com.weatherapp.Model.User
+import com.weatherapp.model.User
 
 class FBUser {
     var name : String ? = null

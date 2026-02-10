@@ -1,4 +1,4 @@
-package com.weatherapp.Model
+package com.weatherapp.model
 
 import android.graphics.Bitmap
 

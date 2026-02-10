@@ -1,6 +1,6 @@
 package com.weatherapp.api
 
-import com.weatherapp.Model.Weather
+import com.weatherapp.model.Weather
 
 data class APICurrentWeather (
     var location : APILocation? = null,

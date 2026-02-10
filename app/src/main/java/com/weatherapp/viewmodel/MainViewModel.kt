@@ -7,10 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.model.LatLng
-import com.weatherapp.Model.City
-import com.weatherapp.Model.Forecast
-import com.weatherapp.Model.User
-import com.weatherapp.Model.Weather
+import com.weatherapp.model.City
+import com.weatherapp.model.Forecast
+import com.weatherapp.model.User
+import com.weatherapp.model.Weather
 import com.weatherapp.api.WeatherService
 import com.weatherapp.api.toForecast
 import com.weatherapp.api.toWeather

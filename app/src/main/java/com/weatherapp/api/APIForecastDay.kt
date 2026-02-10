@@ -1,6 +1,6 @@
 package com.weatherapp.api
 
-import com.weatherapp.Model.Forecast
+import com.weatherapp.model.Forecast
 
 data class APIForecastDay (
     var date: String? = null,

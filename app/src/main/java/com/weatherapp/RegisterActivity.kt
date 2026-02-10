@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.weatherapp.Model.User
+import com.weatherapp.model.User
 import com.weatherapp.db.fb.FBDatabase
 import com.weatherapp.ui.theme.WeatherAppTheme
 import toFBUser

@@ -1,6 +1,5 @@
-package com.weatherapp.Model
+package com.weatherapp.model
 
-import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 
 data class City (

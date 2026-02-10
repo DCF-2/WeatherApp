@@ -1,7 +1,7 @@
 package com.weatherapp.db.fb
 
 import com.google.android.gms.maps.model.LatLng
-import com.weatherapp.Model.City
+import com.weatherapp.model.City
 
 class FBCity {
     var name : String? = null
