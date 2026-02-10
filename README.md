@@ -18,7 +18,7 @@
 
 ## 🚀 A Experiência WeatherApp
 
-O **WeatherApp** é um projeto moderno que serve como base para um sistema de monitoramento climático. Atualmente, ele gerencia autenticação de usuários, exibe localizações em um mapa interativo e permite o gerenciamento de uma lista de cidades favoritas.
+O **WeatherApp** é um projeto moderno que serve como base para um sistema de monitoramento climático. Atualmente, ele gerencia autenticação de usuários, exibe localizações em um mapa interativo e permite o gerenciamento de uma lista de cidades favoritas, alem de fazer gerenciamento em Room e usar o serviço de notificações do Smartphone para atualizar os usuarios sobre o clima na sua cidade favorita.
 O **WeatherApp** redefine como você interage com informações climáticas. Esqueça os aplicativos que param de funcionar quando você entra no elevador ou viaja para áreas sem sinal. Projetado com uma arquitetura **Offline-First**, ele garante que seus dados estejam sempre acessíveis, sincronizados e atualizados.
 
 ### ✨ Destaques do Produto
@@ -79,8 +79,9 @@ Baixe o arquivo `.apk` da versão mais recente na aba de **Releases** deste repo
 
 <div align="center">
 
-Desenvolvido por **Davi Freitas**
+Desenvolvido por **Davi Freitas** |
 Professor Auxiliar **@ramidedantas**
+
 
 [LinkedIn](https://www.linkedin.com/in/davi-freitas-101259303/) • [GitHub](https://github.com/DCF-2)
 
